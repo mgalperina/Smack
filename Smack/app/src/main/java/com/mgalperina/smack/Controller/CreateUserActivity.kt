@@ -1,6 +1,6 @@
 package com.mgalperina.smack.Controller
 
-import android.content.Context
+
 import android.content.Intent
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.Toast
 import com.mgalperina.smack.R
 import com.mgalperina.smack.Services.AuthService
-import com.mgalperina.smack.Services.UserDataService
 import com.mgalperina.smack.Utilities.BROADCAST_USER_DATA_CHANGE
 import kotlinx.android.synthetic.main.activity_create_user.*
 import java.util.*
@@ -65,11 +64,11 @@ class CreateUserActivity : AppCompatActivity() {
 
         if (userName.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
 
-            AuthService.registerUser(this, email, password) { registerSuccess ->
+            AuthService.registerUser( email, password) { registerSuccess, _, _, _, _ ->
                 if (registerSuccess) {
-                    AuthService.loginUser(this, email, password) { loginSuccess ->
+                    AuthService.loginUser( email, password) { loginSuccess, _, _, _, _ ->
                         if (loginSuccess) {
-                            AuthService.createUser(this, userName, email, userAvatar, avatarColor) { createSuccess ->
+                            AuthService.createUser( userName, email, userAvatar, avatarColor) { createSuccess, _, _, _, _ ->
                                 if (createSuccess) {
                                     val userDataChange = Intent(BROADCAST_USER_DATA_CHANGE)
                                     LocalBroadcastManager.getInstance(this).sendBroadcast(userDataChange)
@@ -86,9 +85,7 @@ class CreateUserActivity : AppCompatActivity() {
                     }
                 } else {
                     errorToast()
-
                 }
-
             }
         } else {
             Toast.makeText(
@@ -117,7 +114,6 @@ class CreateUserActivity : AppCompatActivity() {
         createUserBtn.isEnabled = !enable
         createAvatarImageView.isEnabled = !enable
         backgroundColourBtn.isEnabled = !enable
-
     }
 
 }
